@@ -15,7 +15,7 @@ namespace RapidPay.Presentation.Card
         public CardModule() 
             : base("api/v1/card")
         {
-            this.RequireAuthorization();
+            RequireAuthorization();
         }
 
         public override void AddRoutes(IEndpointRouteBuilder app)
@@ -26,21 +26,22 @@ namespace RapidPay.Presentation.Card
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
 
-            app.MapGet("/", async (IMediator mediator, string cardNumber) =>
+            app.MapGet("/", async (IMediator mediator, Guid cardId) =>
             {
-                var command = new GetBalanceByCardNumberQuery(cardNumber);
+                var command = new GetBalanceByCardNumberQuery(cardId);
                 var result = await mediator.Send(command);
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
 
-            app.MapPut("/", async (IMediator mediator, PayCommand command) =>
+            app.MapPatch("/", async (IMediator mediator, PayCommand command) =>
             {
                 var result = await mediator.Send(command);
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
 
-            app.MapPut("/addbalance", async (IMediator mediator, AddBalanceCommand command) =>
+            app.MapPatch("/{Id}", async (Guid Id, IMediator mediator, decimal amount) =>
             {
+                var command = new AddBalanceCommand(Id, amount);
                 var result = await mediator.Send(command);
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });

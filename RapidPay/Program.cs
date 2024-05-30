@@ -21,7 +21,6 @@ builder.Services.AddDbContext<RapidPayContext>
     (options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("RapidPay.Infrastructure")));
-
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
@@ -55,13 +54,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseExceptionHandler();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.UseHttpsRedirection();
 

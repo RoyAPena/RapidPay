@@ -3,23 +3,22 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using RapidPay.Application.Users.Command.CreateUser;
+using RapidPay.Application.Authentication.Command.Login;
 
-namespace RapidPay.Presentation.User
+namespace RapidPay.Presentation.Authentication
 {
-    public class UserModule : CarterModule
+    public class AuthenticationModule : CarterModule
     {
-        public UserModule()
-            : base("api/v1/user")
+        public AuthenticationModule()
+            : base("api/v1/Authentication")
         {
-            RequireAuthorization();
         }
 
         public override void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/", async (IMediator mediator, CreateUserCommand command) =>
+            app.MapPost("/", async (IMediator mediator, LoginCommand query) =>
             {
-                var result = await mediator.Send(command);
+                var result = await mediator.Send(query);
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
         }

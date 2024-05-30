@@ -37,15 +37,13 @@ namespace RapidPay.Application.Cards.Command.Pay
             {
                 return Result.Failure(CardErrors.AmountMoreThan0());
             }
-
-            var tokenizedCardNumber = _securityServices.Tokenize(request.CardNumber);
-
-            var card = await _cardRepository.GetWithLockAsync(tokenizedCardNumber, cancellationToken);
+            
+            var card = await _cardRepository.GetWithLockAsync(request.CardId, cancellationToken);
             
             if (card == null)
             {
                 await _unitOfWork.Rollback(cancellationToken);
-                return Result.Failure(CardErrors.CardNotFound(request.CardNumber));
+                return Result.Failure(CardErrors.CardNotFound());
             }
 
             var currentFee = _paymentFeeService.GetCurrentFee();
@@ -69,7 +67,7 @@ namespace RapidPay.Application.Cards.Command.Pay
 
             await _unitOfWork.Commit(cancellationToken);
 
-            return Result.Success();
+            return Result.Success(card.Balance);
         }
     }
 }

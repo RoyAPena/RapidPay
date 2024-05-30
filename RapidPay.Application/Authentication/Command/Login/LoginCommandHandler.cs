@@ -5,7 +5,7 @@ using RapidPay.Domain.User;
 using RapidPay.Domain.Users;
 using SharedKernel;
 
-namespace RapidPay.Application.Users.Command.Login
+namespace RapidPay.Application.Authentication.Command.Login
 {
     internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand>
     {

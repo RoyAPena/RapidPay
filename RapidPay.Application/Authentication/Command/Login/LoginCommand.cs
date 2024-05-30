@@ -1,6 +1,6 @@
 ﻿using RapidPay.Application.Abstractions.Messaging;
 
-namespace RapidPay.Application.Users.Command.Login
+namespace RapidPay.Application.Authentication.Command.Login
 {
     public sealed record LoginCommand(
         string Username,

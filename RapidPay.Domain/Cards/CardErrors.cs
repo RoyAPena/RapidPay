@@ -4,8 +4,8 @@ namespace RapidPay.Domain.Cards
 {
     public static class CardErrors
     {
-        public static Error CardNotFound(string cardNumber) => Error.NotFound(
-            "Card.CardNumber", $"Card {cardNumber} not found");
+        public static Error CardNotFound() => Error.NotFound(
+            "Card.CardNumber", $"Card not found");
 
         public static Error AmountMoreThan0() => Error.Validation(
             "Amount", "The amount for pay should be more than 0");

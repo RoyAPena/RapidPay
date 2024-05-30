@@ -3,6 +3,6 @@
 namespace RapidPay.Application.Cards.Command.Pay
 {
     public sealed record PayCommand(
-        string CardNumber,
+        Guid CardId,
         decimal Amount) : ICommand;
 }

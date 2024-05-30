@@ -35,9 +35,9 @@ namespace RapidPay.Application.Cards.Command.CreateCard
 
             var tokenizedCardNumber = _securityServices.Tokenize(request.CardNumber);
 
-            var existingCard = await _cardRepository.GetCard(tokenizedCardNumber, cancellationToken);
+            var existsCard = await _cardRepository.CardExists(tokenizedCardNumber, cancellationToken);
 
-            if (existingCard is not null)
+            if (existsCard)
             {
                 return Result.Failure(CardErrors.CardAlreadyExists());
             }
@@ -47,7 +47,7 @@ namespace RapidPay.Application.Cards.Command.CreateCard
             await _cardRepository.Insert(card, cancellationToken);
             await _unitOfWork.Commit(cancellationToken);
 
-            return Result.Success();
+            return Result.Success(card.Id);
         }
     }
 }

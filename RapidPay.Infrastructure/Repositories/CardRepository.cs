@@ -24,13 +24,18 @@ namespace RapidPay.Infrastructure.Repositories
             _context.Entry(card).Property(c => c.Balance).IsModified = true;
         }
 
-        public async Task<Card?> GetCard(string cardNumber, CancellationToken cancelationToken)
+        public async Task<Card?> GetCard(Guid cardId, CancellationToken cancelationToken)
         {
-            var card = await _context.Cards.FirstOrDefaultAsync(c => c.CardNumber == cardNumber, cancelationToken);
+            var card = await _context.Cards.FirstOrDefaultAsync(c => c.Id == cardId, cancelationToken);
             return card;
         }
 
-        public async Task<Card?> GetWithLockAsync(string cardNumber, CancellationToken cancelationToken)
+        public async Task<bool> CardExists(string cardNumber, CancellationToken cancelationToken)
+        {
+            return await _context.Cards.AnyAsync(c => c.CardNumber == cardNumber, cancelationToken);
+        }
+
+        public async Task<Card?> GetWithLockAsync(Guid cardId, CancellationToken cancelationToken)
         {
             // Implemented this query for avoid another transaction modified the same card at same time.
             try
@@ -40,22 +45,21 @@ namespace RapidPay.Infrastructure.Repositories
                           {nameof(Card.Id)},
                           {nameof(Card.CardHolderName)}, 
                           {nameof(Card.ExpiryDate)},
+                          {nameof(Card.CardNumber)},
                           {nameof(Card.IssuingBank)}, 
-                          {nameof(Card.Balance)},
-                          {nameof(Card.CardNumber)}
+                          {nameof(Card.Balance)}
                      FROM {nameof(Card)}s
                     WITH (UPDLOCK, READPAST)
-                    WHERE {nameof(Card.CardNumber)} = @cardNumber";
+                    WHERE {nameof(Card.Id)} = @cardId";
                 return await _context
             .Cards
             .FromSqlRaw(
                 sqlString,
-                new SqlParameter("@cardNumber", cardNumber))
+                new SqlParameter("@cardId", cardId))
             .FirstOrDefaultAsync(cancelationToken);
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }

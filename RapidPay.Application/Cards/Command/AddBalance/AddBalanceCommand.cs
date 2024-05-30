@@ -3,6 +3,6 @@
 namespace RapidPay.Application.Cards.Command.AddBalance
 {
     public sealed record AddBalanceCommand (
-        string CardNumber,
+        Guid CardId,
         decimal Amount) : ICommand;
 }

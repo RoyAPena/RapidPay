@@ -9,24 +9,20 @@ namespace RapidPay.Application.Cards.Query.GetBalance
         : IQueryHandler<GetBalanceByCardNumberQuery>
     {
         private readonly ICardRepository _cardRepository;
-        private readonly ISecurityServices _securityServices;
 
         public GetBalanceByCardNumberQueryHandler(
-            ICardRepository cardRepository, ISecurityServices securityServices)
+            ICardRepository cardRepository)
         {
             _cardRepository = cardRepository;
-            _securityServices = securityServices;
         }
 
         public async Task<Result> Handle(GetBalanceByCardNumberQuery request, CancellationToken cancellationToken)
         {
-            var cardNumberTokenized = _securityServices.Tokenize(request.CardNumber);
-
-            var card = await _cardRepository.GetCard(cardNumberTokenized, cancellationToken);
+            var card = await _cardRepository.GetCard(request.CardId, cancellationToken);
 
             if (card is null)
             {
-                return Result.Failure(CardErrors.CardNotFound(request.CardNumber));
+                return Result.Failure(CardErrors.CardNotFound());
             }
 
             var response =  Result.Success(new BalanceResponse(card.Balance));

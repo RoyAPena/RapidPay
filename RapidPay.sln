@@ -17,7 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RapidPay.Presentation", "Ra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{725170C0-AFF8-4447-95BE-81C73E377D51}"
 	ProjectSection(SolutionItems) = preProject
-		RapidPay.postman_collection.json = RapidPay.postman_collection.json
+		RapidPay.postman_collection-2.0 = RapidPay.postman_collection-2.0
+		RapidPay.postman_collection-2.1 = RapidPay.postman_collection-2.1
 		README.md = README.md
 	EndProjectSection
 EndProject
