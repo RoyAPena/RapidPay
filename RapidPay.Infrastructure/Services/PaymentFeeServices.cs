@@ -1,16 +1,18 @@
 ﻿using RapidPay.Domain.Abstractions;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("RapidPay.Infrastructure.Tests")]
 namespace RapidPay.Infrastructure.Services
 {
     public class PaymentFeeServices : IPaymentFeeService
     {
-        private decimal currentFee;
-        private Random random;
+        internal decimal currentFee;
+        private Random _random;
 
-        public PaymentFeeServices()
+        public PaymentFeeServices(Random random)
         {
-            random = new Random();
-            currentFee = (decimal)random.NextDouble() * 2;
+            _random = random;
+            currentFee = (decimal)_random.NextDouble() * 2;
             StartFeeUpdate();
         }
 
@@ -19,7 +21,7 @@ namespace RapidPay.Infrastructure.Services
             return currentFee;
         }
 
-        private void StartFeeUpdate()
+        internal void StartFeeUpdate()
         {
             Task.Run(async () =>
             {
@@ -31,9 +33,9 @@ namespace RapidPay.Infrastructure.Services
             });
         }
 
-        private void UpdateFee()
+        internal void UpdateFee()
         {
-            var multiplier = (decimal)random.NextDouble() * 2;
+            var multiplier = (decimal)_random.NextDouble() * 2;
 
             currentFee *= multiplier;
         }

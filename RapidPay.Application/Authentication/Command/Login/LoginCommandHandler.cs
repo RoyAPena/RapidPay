@@ -24,7 +24,7 @@ namespace RapidPay.Application.Authentication.Command.Login
 
             if (!loginSuccess)
             {
-                return Result.Failure(UserErrors.InvalidCredential());
+                return Result.Failure(UserErrors.InvalidCredential);
             }
 
             return Result.Success(_jwtProvider.Generate(command.Username));

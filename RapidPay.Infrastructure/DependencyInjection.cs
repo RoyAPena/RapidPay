@@ -21,9 +21,11 @@ namespace RapidPay.Application
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<ISecurityServices, SecurityServices>();
-            services.AddScoped<IPaymentFeeService, PaymentFeeServices>();
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<RapidPayContext>();
             services.AddScoped<IUserServices, UserServices>();
+
+            services.AddSingleton<Random>();
+            services.AddSingleton<IPaymentFeeService, PaymentFeeServices>();
 
             return services;
         }

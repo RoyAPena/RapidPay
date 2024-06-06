@@ -1,4 +1,7 @@
-﻿namespace RapidPay.Presentation.Card.Dtos.Request
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("RapidPay.Presentation.Tests")]
+namespace RapidPay.Presentation.Card.Dtos.Request
 {
     internal sealed record CreateCardDto(
         string CardNumber,
