@@ -13,20 +13,17 @@ namespace RapidPay.Application.Cards.Command.Pay
         private readonly ICardRepository _cardRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IPaymentFeeService _paymentFeeService;
-        private readonly ISecurityServices _securityServices;
 
         public PayCommandHandler(
             IUnitOfWork unitOfWork,
             ICardRepository cardRepository,
             ITransactionRepository transactionRepository,
-            IPaymentFeeService paymentFeeService,
-            ISecurityServices securityServices)
+            IPaymentFeeService paymentFeeService)
         {
             _unitOfWork = unitOfWork;
             _cardRepository = cardRepository;
             _transactionRepository = transactionRepository;
             _paymentFeeService = paymentFeeService;
-            _securityServices = securityServices;
         }
 
         public async Task<Result> Handle(PayCommand request, CancellationToken cancellationToken)
@@ -35,7 +32,7 @@ namespace RapidPay.Application.Cards.Command.Pay
 
             if (request.Amount <= 0)
             {
-                return Result.Failure(CardErrors.AmountMoreThan0());
+                return Result.Failure(CardErrors.AmountMoreThan0);
             }
             
             var card = await _cardRepository.GetWithLockAsync(request.CardId, cancellationToken);
@@ -43,7 +40,7 @@ namespace RapidPay.Application.Cards.Command.Pay
             if (card == null)
             {
                 await _unitOfWork.Rollback(cancellationToken);
-                return Result.Failure(CardErrors.CardNotFound());
+                return Result.Failure(CardErrors.CardNotFound);
             }
 
             var currentFee = _paymentFeeService.GetCurrentFee();
@@ -54,7 +51,7 @@ namespace RapidPay.Application.Cards.Command.Pay
             if (card.Balance < totalAmount)
             {
                 await _unitOfWork.Rollback(cancellationToken);
-                return Result.Failure(CardErrors.InsufficientBalance());
+                return Result.Failure(CardErrors.InsufficientBalance);
             }
 
             card = Card.Debit(card, totalAmount);

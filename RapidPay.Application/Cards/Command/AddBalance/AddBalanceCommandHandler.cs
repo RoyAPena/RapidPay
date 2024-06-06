@@ -31,7 +31,7 @@ namespace RapidPay.Application.Cards.Command.AddBalance
             if (card == null)
             {
                 await _unitOfWork.Rollback(cancellationToken);
-                return Result.Failure(CardErrors.CardNotFound());
+                return Result.Failure(CardErrors.CardNotFound);
             }
 
             card = Card.Credit(card, request.Amount);

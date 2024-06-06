@@ -1,7 +1,5 @@
-﻿using RapidPay.Application.Abstractions.Data;
+﻿using RapidPay.Application.Abstractions;
 using RapidPay.Application.Abstractions.Messaging;
-using RapidPay.Domain.Abstractions;
-using RapidPay.Domain.User;
 using RapidPay.Domain.Users;
 using SharedKernel;
 
@@ -9,39 +7,36 @@ namespace RapidPay.Application.Users.Command.CreateUser
 {
     internal sealed class CreateUserCommandHandler : ICommandHandler<CreateUserCommand>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IUserRepository _userRepository;
-        private readonly ISecurityServices _securityServices;
+        private readonly IUserServices _userService;
 
-        public CreateUserCommandHandler(
-            IUnitOfWork unitOfWork,
-            IUserRepository userRepository,
-            ISecurityServices securityServices)
+        public CreateUserCommandHandler(IUserServices userService)
         {
-            _unitOfWork = unitOfWork;
-            _userRepository = userRepository;
-            _securityServices = securityServices;
+            _userService = userService;
         }
 
         public async Task<Result> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            await _unitOfWork.BeginTransaction(cancellationToken);
-
-            var existsUsername = await _userRepository.ExistsUsername(request.Username, cancellationToken);
-
-            if (existsUsername)
+            if (string.IsNullOrWhiteSpace(request.Username))
             {
-                return Result.Failure(UserErrors.UsernameShouldBeUnique());
+                return Result.Failure(UserErrors.UsernameCannotBeEmpty);
             }
 
-            var encryptedPassword = _securityServices.Encrypt(request.Password);
+            if (string.IsNullOrWhiteSpace(request.Password))
+            {
+                return Result.Failure(UserErrors.PasswordCannotBeEmpty);
+            }
 
-            var user = User.Create(request.Username, encryptedPassword);
+            if (await _userService.UsernameExists(request.Username))
+            {
+                return Result.Failure(UserErrors.UsernameShouldBeUnique);
+            }
 
-            await _userRepository.Insert(user, cancellationToken);
-            await _unitOfWork.Commit(cancellationToken);
+            if (!await _userService.ValidatePassword(request.Password))
+            {
+                return Result.Failure(UserErrors.PasswordIsNotValid);
+            }
 
-            return Result.Success();
+            return Result.Success(await _userService.CreateUserAsync(request.Username, request.Password));
         }
     }
 }

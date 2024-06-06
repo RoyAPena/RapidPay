@@ -5,11 +5,13 @@ using RapidPay.Domain.Cards;
 using SharedKernel;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("RapidPay.Application.Tests")]
+[assembly: InternalsVisibleTo("RapidPay.Application.Test")]
 namespace RapidPay.Application.Cards.Command.CreateCard
 {
     internal sealed class CreateCardCommandHandler : ICommandHandler<CreateCardCommand>
     {
+        private const int CardNumberLength = 15;
+
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICardRepository _cardRepository;
         private readonly ISecurityServices _securityServices;
@@ -28,9 +30,9 @@ namespace RapidPay.Application.Cards.Command.CreateCard
         {
             await _unitOfWork.BeginTransaction(cancellationToken);
 
-            if (request.CardNumber.Length != 15)
+            if (request.CardNumber.Length != CardNumberLength)
             {
-                return Result.Failure(CardErrors.CardNumberLength());
+                return Result.Failure(CardErrors.CardNumberLength);
             }
 
             var tokenizedCardNumber = _securityServices.Tokenize(request.CardNumber);
@@ -39,7 +41,7 @@ namespace RapidPay.Application.Cards.Command.CreateCard
 
             if (existsCard)
             {
-                return Result.Failure(CardErrors.CardAlreadyExists());
+                return Result.Failure(CardErrors.CardAlreadyExists);
             }
 
             var card = Card.Create(tokenizedCardNumber, request.CardHolderName, request.ExpiryDate, request.IssuingBank, request.Balance);

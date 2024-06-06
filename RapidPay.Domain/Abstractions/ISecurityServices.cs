@@ -3,6 +3,5 @@
     public interface ISecurityServices
     {
         string Tokenize(string input);
-        string Encrypt(string input);
     }
 }

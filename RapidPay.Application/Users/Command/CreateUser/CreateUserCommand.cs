@@ -1,5 +1,4 @@
-﻿
-using RapidPay.Application.Abstractions.Messaging;
+﻿using RapidPay.Application.Abstractions.Messaging;
 
 namespace RapidPay.Application.Users.Command.CreateUser
 {

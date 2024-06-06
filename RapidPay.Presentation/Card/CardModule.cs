@@ -1,4 +1,5 @@
-﻿using Carter;
+﻿using AutoMapper;
+using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -7,42 +8,54 @@ using RapidPay.Application.Cards.Command.AddBalance;
 using RapidPay.Application.Cards.Command.CreateCard;
 using RapidPay.Application.Cards.Command.Pay;
 using RapidPay.Application.Cards.Query.GetBalance;
+using RapidPay.Presentation.Card.Dtos.Request;
 
 namespace RapidPay.Presentation.Card
 {
     public class CardModule : CarterModule
     {
-        public CardModule() 
+        private readonly IMapper _mapper;
+
+        public CardModule(IMapper mapper)
             : base("api/v1/card")
         {
             RequireAuthorization();
+            _mapper = mapper;
         }
 
         public override void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/", async (IMediator mediator, CreateCardCommand query) =>
+            app.MapPost("/", async (IMediator _mediator, CreateCardDto request) =>
             {
-                var result = await mediator.Send(query);
+                var command = _mapper.Map<CreateCardCommand>(request);
+
+                var result = await _mediator.Send(command);
+
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
 
-            app.MapGet("/", async (IMediator mediator, Guid cardId) =>
+            app.MapGet("/", async (IMediator _mediator, Guid cardId) =>
             {
-                var command = new GetBalanceByCardNumberQuery(cardId);
-                var result = await mediator.Send(command);
+                var query = new GetBalanceByCardNumberQuery(cardId);
+                
+                var result = await _mediator.Send(query);
+
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
 
-            app.MapPatch("/", async (IMediator mediator, PayCommand command) =>
+            app.MapPatch("/", async (IMediator _mediator, PayDto request) =>
             {
-                var result = await mediator.Send(command);
+                var command = _mapper.Map<PayCommand>(request);
+                
+                var result = await _mediator.Send(command);
+
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
 
-            app.MapPatch("/{Id}", async (Guid Id, IMediator mediator, decimal amount) =>
+            app.MapPatch("/{Id}", async (IMediator _mediator, Guid Id, decimal amount) =>
             {
                 var command = new AddBalanceCommand(Id, amount);
-                var result = await mediator.Send(command);
+                var result = await _mediator.Send(command);
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
         }

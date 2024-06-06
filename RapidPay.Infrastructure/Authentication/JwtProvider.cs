@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RapidPay.Application.Abstractions;
-using RapidPay.Domain.User;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,11 +16,11 @@ namespace RapidPay.Infrastructure.Authentication
             _options = options.Value;
         }
 
-        public string Generate(User user)
+        public string Generate(string username)
         {
             var claims = new Claim[]
             {
-                new (ClaimTypes.Name, user.Username)
+                new (ClaimTypes.Name, username)
             };
 
             var signingCredentials = new SigningCredentials(
@@ -36,33 +35,9 @@ namespace RapidPay.Infrastructure.Authentication
                 DateTime.UtcNow.AddMinutes(5),
                 signingCredentials);
 
-            string tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
 
             return tokenValue;
-        }
-
-        public bool ValidateToken(string token)
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
-                ValidateIssuer = true,
-                ValidIssuer = _options.Issuer,
-                ValidateAudience = false, // Can be enabled later if needed
-                ValidateLifetime = true
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            try
-            {
-                tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken validatedToken);
-                return true;
-            }
-            catch (SecurityTokenException)
-            {
-                return false;
-            }
         }
     }
 }

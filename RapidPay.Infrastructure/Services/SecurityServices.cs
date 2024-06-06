@@ -6,8 +6,6 @@ namespace RapidPay.Infrastructure.Services
 {
     public class SecurityServices : ISecurityServices
     {
-        private const string KEY = "12345678901234567890123456789012";
-
         //This method is used to tokenized the input string, is used for card number
         public string Tokenize(string input)
         {
@@ -24,36 +22,6 @@ namespace RapidPay.Infrastructure.Services
                 }
                 return builder.ToString();
             }
-        }
-
-        //This method is used to encrypt the input string, is used for password
-        public string Encrypt(string input)
-        {
-            byte[] iv = new byte[16];
-            byte[] array;
-
-            using (Aes aes = Aes.Create())
-            {
-                aes.Key = Encoding.UTF8.GetBytes(KEY);
-                aes.IV = iv;
-
-                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (StreamWriter streamWriter = new StreamWriter(cryptoStream))
-                        {
-                            streamWriter.Write(input);
-                        }
-
-                        array = memoryStream.ToArray();
-                    }
-                }
-            }
-
-            return Convert.ToBase64String(array);
         }
     }
 }

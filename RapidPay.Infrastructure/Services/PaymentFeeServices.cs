@@ -2,12 +2,12 @@
 
 namespace RapidPay.Infrastructure.Services
 {
-    public class PaymentFeeService : IPaymentFeeService
+    public class PaymentFeeServices : IPaymentFeeService
     {
         private decimal currentFee;
         private Random random;
 
-        public PaymentFeeService()
+        public PaymentFeeServices()
         {
             random = new Random();
             currentFee = (decimal)random.NextDouble() * 2;
@@ -33,7 +33,7 @@ namespace RapidPay.Infrastructure.Services
 
         private void UpdateFee()
         {
-            var multiplier = (decimal)random.NextDouble();
+            var multiplier = (decimal)random.NextDouble() * 2;
 
             currentFee *= multiplier;
         }

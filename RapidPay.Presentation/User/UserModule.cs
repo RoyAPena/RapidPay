@@ -1,25 +1,33 @@
-﻿using Carter;
+﻿using AutoMapper;
+using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using RapidPay.Application.Users.Command.CreateUser;
+using RapidPay.Presentation.User.Dtos.Request;
 
 namespace RapidPay.Presentation.User
 {
     public class UserModule : CarterModule
     {
-        public UserModule()
+        private readonly IMapper _mapper;
+
+        public UserModule(IMapper mapper)
             : base("api/v1/user")
         {
             RequireAuthorization();
+            _mapper = mapper;
         }
 
         public override void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/", async (IMediator mediator, CreateUserCommand command) =>
+            app.MapPost("/", async (IMediator _mediator, CreateUserDto request) =>
             {
-                var result = await mediator.Send(command);
+                var command = _mapper.Map<CreateUserCommand>(request);
+
+                var result = await _mediator.Send(command);
+
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
         }
