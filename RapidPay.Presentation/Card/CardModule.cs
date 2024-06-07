@@ -3,6 +3,7 @@ using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using RapidPay.Application.Cards.Command.CreateCard;
 using RapidPay.Application.Cards.Command.Pay;
@@ -11,6 +12,7 @@ using RapidPay.Presentation.Card.Dtos.Request;
 
 namespace RapidPay.Presentation.Card
 {
+    [ApiExplorerSettings(GroupName = "Card Management")]
     public class CardModule : CarterModule
     {
         private readonly IMapper _mapper;
@@ -33,7 +35,7 @@ namespace RapidPay.Presentation.Card
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
 
-            app.MapGet("/", async (IMediator _mediator, Guid cardId) =>
+            app.MapGet("{cardId}/balance", async (IMediator _mediator, Guid cardId) =>
             {
                 var query = new GetBalanceByCardNumberQuery(cardId);
                 

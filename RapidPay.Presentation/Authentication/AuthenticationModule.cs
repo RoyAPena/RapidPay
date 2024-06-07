@@ -3,12 +3,14 @@ using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using RapidPay.Application.Authentication.Command.Login;
 using RapidPay.Presentation.Authentication.Dtos.Request;
 
 namespace RapidPay.Presentation.Authentication
 {
+    [ApiExplorerSettings(GroupName = "Authentication")]
     public class AuthenticationModule : CarterModule
     {
         private readonly IMapper _mapper;

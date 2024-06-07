@@ -98,18 +98,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/card?cardId={{cardId}}",
+							"raw": "{{url}}/card/{{cardId}}",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"card"
-							],
-							"query": [
-								{
-									"key": "cardId",
-									"value": "{{cardId}}"
-								}
+								"card",
+								"{{cardId}}"
 							]
 						}
 					},
