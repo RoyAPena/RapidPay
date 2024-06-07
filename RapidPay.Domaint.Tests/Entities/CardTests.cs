@@ -48,26 +48,5 @@ namespace RapidPay.Domaint.Tests.Entities
             Assert.That(card, Is.SameAs(debitedCard));
             Assert.That(balance - debitAmount, Is.EqualTo(debitedCard.Balance));
         }
-
-        [Test]
-        public void Credit_Should_Increase_Balance_By_Specified_Amount()
-        {
-            // Arrange
-            string cardNumber = "1234567890123456";
-            string cardHolderName = "John Doe";
-            DateTime expiryDate = new DateTime(2025, 12, 31);
-            string issuingBank = "RapidPay Bank";
-            decimal balance = 100.00m;
-            decimal creditAmount = 25.00m;
-
-            var card = Card.Create(cardNumber, cardHolderName, expiryDate, issuingBank, balance);
-
-            // Act
-            var creditedCard = Card.Credit(card, creditAmount);
-
-            // Assert
-            Assert.That(card, Is.SameAs(creditedCard));
-            Assert.That(balance + creditAmount, Is.EqualTo(creditedCard.Balance));
-        }
     }
 }

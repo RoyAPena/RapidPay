@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using RapidPay.Application.Cards.Command.AddBalance;
 using RapidPay.Application.Cards.Command.CreateCard;
 using RapidPay.Application.Cards.Command.Pay;
 using RapidPay.Application.Cards.Query.GetBalance;
@@ -43,19 +42,12 @@ namespace RapidPay.Presentation.Card
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
 
-            app.MapPatch("/", async (IMediator _mediator, PayDto request) =>
+            app.MapPost("{cardId}/pay", async (IMediator _mediator, Guid cardId, PayDto request) =>
             {
-                var command = _mapper.Map<PayCommand>(request);
+                var command = new PayCommand(cardId, request.Amount);
                 
                 var result = await _mediator.Send(command);
 
-                return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
-            });
-
-            app.MapPatch("/{Id}", async (IMediator _mediator, Guid Id, decimal amount) =>
-            {
-                var command = new AddBalanceCommand(Id, amount);
-                var result = await _mediator.Send(command);
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });
         }

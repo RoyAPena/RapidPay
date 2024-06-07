@@ -33,11 +33,5 @@ namespace RapidPay.Domain.Transactions
             var transaction = new Transaction(cardId, amount, TransactionType.Debit, fee);
             return transaction;
         }
-
-        public static Transaction CreateCredit(Guid cardId, decimal amount)
-        {
-            var transaction = new Transaction(cardId, amount, TransactionType.Credit);
-            return transaction;
-        }
     }
 }

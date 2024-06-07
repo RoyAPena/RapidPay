@@ -1,51 +1,10 @@
 {
 	"info": {
-		"_postman_id": "b513932e-0df5-4543-b952-a46c85e3a73d",
+		"_postman_id": "8127bb12-14af-4c54-bd81-8fda6fde1199",
 		"name": "RapidPay",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
-		{
-			"name": "User",
-			"item": [
-				{
-					"name": "Create User",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{bearerToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Username\" : \"Admin\",\r\n    \"Password\" : \"Abc_12345\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/user",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"user"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
 		{
 			"name": "Card",
 			"item": [
@@ -98,11 +57,11 @@
 								}
 							]
 						},
-						"method": "PATCH",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"cardId\": \"{{cardId}}\",\r\n  \"amount\": 1000\r\n}",
+							"raw": "{\r\n  \"amount\": 1000\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -110,12 +69,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/card",
+							"raw": "{{url}}/card/{{cardId}}/pay",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"card"
+								"card",
+								"{{cardId}}",
+								"pay"
 							]
 						}
 					},
@@ -148,49 +109,6 @@
 								{
 									"key": "cardId",
 									"value": "{{cardId}}"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add Balance",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{bearerToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/card/{{cardId}}?amount=1000",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"card",
-								"{{cardId}}"
-							],
-							"query": [
-								{
-									"key": "amount",
-									"value": "1000"
 								}
 							]
 						}
@@ -264,7 +182,7 @@
 		},
 		{
 			"key": "url",
-			"value": "https://localhost:7197/api/v1",
+			"value": "",
 			"type": "default"
 		}
 	]

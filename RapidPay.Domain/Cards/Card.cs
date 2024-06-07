@@ -39,11 +39,5 @@ namespace RapidPay.Domain.Cards
             card.Balance -= amount;
             return card;
         }
-
-        public static Card Credit(Card card, decimal amount)
-        {
-            card.Balance += amount;
-            return card;
-        }
     }
 }

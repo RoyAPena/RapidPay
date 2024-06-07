@@ -18,27 +18,10 @@ namespace RapidPay.Domain.Tests.Entities
             var transaction = Transaction.CreateDebit(cardId, amount, fee);
 
             // Assert
-            Assert.AreEqual(cardId, transaction.CardId);
-            Assert.AreEqual(amount, transaction.Amount);
-            Assert.AreEqual(fee, transaction.Fee);
-            Assert.AreEqual(TransactionType.Debit, transaction.TransactionType);
-        }
-
-        [Test]
-        public void CreateCredit_ShouldReturnTransactionWithCorrectValues()
-        {
-            // Arrange
-            var cardId = Guid.NewGuid();
-            var amount = 100m;
-
-            // Act
-            var transaction = Transaction.CreateCredit(cardId, amount);
-
-            // Assert
-            Assert.AreEqual(cardId, transaction.CardId);
-            Assert.AreEqual(amount, transaction.Amount);
-            Assert.AreEqual(0m, transaction.Fee);
-            Assert.AreEqual(TransactionType.Credit, transaction.TransactionType);
+            Assert.That(cardId, Is.EqualTo(transaction.CardId));
+            Assert.That(amount, Is.EqualTo(transaction.Amount));
+            Assert.That(fee, Is.EqualTo(transaction.Fee));
+            Assert.That(TransactionType.Debit, Is.EqualTo(transaction.TransactionType));
         }
     }
 }

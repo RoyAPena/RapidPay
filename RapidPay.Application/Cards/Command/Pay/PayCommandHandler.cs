@@ -64,7 +64,7 @@ namespace RapidPay.Application.Cards.Command.Pay
 
             await _unitOfWork.Commit(cancellationToken);
 
-            return Result.Success(card.Balance);
+            return Result.Success(Math.Round(card.Balance, 2, MidpointRounding.AwayFromZero));
         }
     }
 }
