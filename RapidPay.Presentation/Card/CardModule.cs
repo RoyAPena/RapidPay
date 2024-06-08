@@ -33,7 +33,7 @@ namespace RapidPay.Presentation.Card
                 var result = await _mediator.Send(command);
 
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
-            });
+            }).WithTags("Card Management");
 
             app.MapGet("{cardId}/balance", async (IMediator _mediator, Guid cardId) =>
             {
@@ -42,7 +42,7 @@ namespace RapidPay.Presentation.Card
                 var result = await _mediator.Send(query);
 
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
-            });
+            }).WithTags("Card Management");
 
             app.MapPost("{cardId}/pay", async (IMediator _mediator, Guid cardId, PayDto request) =>
             {
@@ -51,7 +51,7 @@ namespace RapidPay.Presentation.Card
                 var result = await _mediator.Send(command);
 
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
-            });
+            }).WithTags("Card Management");
         }
     }
 }

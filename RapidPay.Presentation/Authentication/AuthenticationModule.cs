@@ -30,7 +30,7 @@ namespace RapidPay.Presentation.Authentication
                 var result = await _mediator.Send(command);
 
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
-            });
+            }).WithTags("Authentication");
         }
     }
 }
